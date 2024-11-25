@@ -1,7 +1,7 @@
 import java.io.File;
 import java.util.Scanner;
 
-public class TicketCLI {
+public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Configuration config;
