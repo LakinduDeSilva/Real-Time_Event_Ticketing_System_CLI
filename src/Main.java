@@ -39,56 +39,47 @@ public class Main {
         // Display the configuration details
         System.out.println("\nConfiguration Details:");
         System.out.printf("Total Tickets: %d%n", config.getTotalTickets());
-        System.out.printf("Ticket Release Rate: %d tickets/sec%n", config.getTicketReleaseRate());
-        System.out.printf("Customer Retrieval Rate: %d tickets/sec%n", config.getCustomerRetrievalRate());
+        System.out.printf("Ticket Release Rate: %d Tickets/Milli-Seconds%n", config.getTicketReleaseRate());
+        System.out.printf("Customer Retrieval Rate: %d Tickets/Milli-Seconds%n", config.getCustomerRetrievalRate());
         System.out.printf("Maximum Ticket Capacity: %d%n", config.getMaxTicketCapacity());
 
-        System.out.println("\nCreating vendors...");
-        int numberOfVendors = getValidInput(scanner, "Enter the number of vendors: ");
-        int ticketsPerVendor = getValidInput(scanner, "Enter the number of tickets each vendor will release: ");
+        System.out.println("\nStarting Ticketing System...");
+        TicketPool ticketPool = new TicketPool(config.getMaxTicketCapacity());
 
-        TicketPool ticketPool = new TicketPool(); // Shared ticket pool
+        Vendor vendor1 = new Vendor(ticketPool, config.getTicketReleaseRate(), config.getTotalTickets() / 2, "Vendor1");
+        Vendor vendor2 = new Vendor(ticketPool, config.getTicketReleaseRate(), config.getTotalTickets() / 2, "Vendor2");
 
-        Thread[] vendorThreads = new Thread[numberOfVendors];
-        for (int i = 0; i < numberOfVendors; i++) {
-            vendorThreads[i] = new Thread(new Vendor(ticketPool, ticketsPerVendor), "Vendor-" + (i + 1));
-            vendorThreads[i].start();
+        Customer customer1 = new Customer(ticketPool, config.getCustomerRetrievalRate(), "Customer1");
+        Customer customer2 = new Customer(ticketPool, config.getCustomerRetrievalRate(), "Customer2");
+
+        Thread vendorThread1 = new Thread(vendor1);
+        Thread vendorThread2 = new Thread(vendor2);
+        Thread customerThread1 = new Thread(customer1);
+        Thread customerThread2 = new Thread(customer2);
+
+        vendorThread1.start();
+        vendorThread2.start();
+        customerThread1.start();
+        customerThread2.start();
+
+        try {
+            vendorThread1.join();
+            vendorThread2.join();
+            customerThread1.interrupt();
+            customerThread2.interrupt();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
-        // Wait for all vendor threads to complete
-        for (Thread vendorThread : vendorThreads) {
-            try {
-                vendorThread.join();
-            } catch (InterruptedException e) {
-                System.out.println("Vendor thread interrupted.");
-            }
-        }
-
-        System.out.println("\nCreating customers...");
-        int numberOfCustomers = getValidInput(scanner, "Enter the number of customers: ");
-
-        Thread[] customerThreads = new Thread[numberOfCustomers];
-        for (int i = 0; i < numberOfCustomers; i++) {
-            customerThreads[i] = new Thread(new Customer(ticketPool), "Customer-" + (i + 1));
-            customerThreads[i].start();
-        }
-
-        // Wait for all customer threads to complete
-        for (Thread customerThread : customerThreads) {
-            try {
-                customerThread.join();
-            } catch (InterruptedException e) {
-                System.out.println("Customer thread interrupted.");
-            }
-        }
+        System.out.println("Ticketing process completed.");
 
         scanner.close();
     }
 
     private static Configuration createNewConfiguration(Scanner scanner) {
         int totalTickets = getValidInput(scanner, "Enter the total number of tickets: ");
-        int ticketReleaseRate = getValidInput(scanner, "Enter the ticket release rate (tickets/sec): ");
-        int customerRetrievalRate = getValidInput(scanner, "Enter the customer retrieval rate (tickets/sec): ");
+        int ticketReleaseRate = getValidInput(scanner, "Enter the ticket release rate (Tickets/Milli-Seconds): ");
+        int customerRetrievalRate = getValidInput(scanner, "Enter the customer retrieval rate (Tickets/Milli-Seconds): ");
         int maxTicketCapacity = getValidInput(scanner, "Enter the maximum ticket capacity: ");
 
         return new Configuration(totalTickets, ticketReleaseRate, customerRetrievalRate, maxTicketCapacity);

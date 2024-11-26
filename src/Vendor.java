@@ -1,22 +1,27 @@
 public class Vendor implements Runnable {
-    private final TicketPool ticketPool; // Shared ticket pool
-    private final int ticketsToRelease; // Number of tickets this vendor will release
+    private final TicketPool ticketPool;
+    private final int ticketReleaseRate;
+    private final int totalTickets;
+    private final String vendorName;
 
-    public Vendor(TicketPool ticketPool, int ticketsToRelease) {
+    public Vendor(TicketPool ticketPool, int ticketReleaseRate, int totalTickets, String vendorName) {
         this.ticketPool = ticketPool;
-        this.ticketsToRelease = ticketsToRelease;
+        this.ticketReleaseRate = ticketReleaseRate;
+        this.totalTickets = totalTickets;
+        this.vendorName = vendorName;
     }
 
     @Override
     public void run() {
-        for (int i = 0; i < ticketsToRelease; i++) {
+        for (int i = 1; i <= totalTickets; i++) {
             try {
-                Thread.sleep(100); // Simulate time taken to release tickets
-                ticketPool.addTickets(1); // Add one ticket to the pool
-                System.out.println(Thread.currentThread().getName() + " added a ticket. Total tickets: " + ticketPool.getTicketCount());
+                Thread.sleep(ticketReleaseRate);
+                String ticket = vendorName + "-Ticket-" + i;
+                ticketPool.addTicket(ticket);
             } catch (InterruptedException e) {
-                System.out.println(Thread.currentThread().getName() + " was interrupted.");
+                Thread.currentThread().interrupt();
             }
         }
+        System.out.println(vendorName + " has released all tickets.");
     }
 }

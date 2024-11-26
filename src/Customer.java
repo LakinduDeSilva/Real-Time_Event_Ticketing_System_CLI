@@ -1,24 +1,24 @@
 public class Customer implements Runnable {
-    private final TicketPool ticketPool; // Shared ticket pool
+    private final TicketPool ticketPool;
+    private final int customerRetrievalRate;
+    private final String customerName;
 
-    public Customer(TicketPool ticketPool) {
+    public Customer(TicketPool ticketPool, int customerRetrievalRate, String customerName) {
         this.ticketPool = ticketPool;
+        this.customerRetrievalRate = customerRetrievalRate;
+        this.customerName = customerName;
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                Thread.sleep(200); // Simulate time taken to retrieve a ticket
-                boolean success = ticketPool.removeTicket();
-                if (success) {
-                    System.out.println(Thread.currentThread().getName() + " purchased a ticket. Remaining tickets: " + ticketPool.getTicketCount());
-                } else {
-                    System.out.println(Thread.currentThread().getName() + " found no tickets left.");
-                    break; // Exit the loop when no tickets are available
-                }
+                Thread.sleep(customerRetrievalRate);
+                String ticket = ticketPool.removeTicket();
+                System.out.println(customerName + " purchased: " + ticket);
             } catch (InterruptedException e) {
-                System.out.println(Thread.currentThread().getName() + " was interrupted.");
+                Thread.currentThread().interrupt();
+                break;
             }
         }
     }
