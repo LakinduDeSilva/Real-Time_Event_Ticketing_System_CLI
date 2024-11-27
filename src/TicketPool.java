@@ -1,10 +1,12 @@
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.*;
 
 public class TicketPool {
     private final List<String> tickets; // Use ArrayList instead of LinkedList
     private final int maxCapacity;
+    private static final Logger logger = Logger.getLogger(Configuration.class.getName());
 
     public TicketPool(int maxCapacity) {
         this.maxCapacity = maxCapacity;
@@ -14,11 +16,11 @@ public class TicketPool {
     public synchronized boolean addTickets(String ticket) {
         if (tickets.size() < maxCapacity) {
             tickets.add(ticket);
-            System.out.println("Ticket added: " + ticket + " | Total Tickets: " + tickets.size());
+            logger.info("Ticket added: " + ticket + " | Total Tickets: " + tickets.size());
             notifyAll(); // Notify consumers that a ticket is available
             return true;
         } else {
-            System.out.println("TicketPool is full. Cannot add more tickets.");
+            logger.info("TicketPool is full. Cannot add more tickets.");
             return false;
         }
     }
@@ -26,14 +28,15 @@ public class TicketPool {
     public synchronized String removeTicket() {
         while (tickets.isEmpty()) {
             try {
-                System.out.println("No tickets available. Waiting for tickets...");
+                logger.info("No tickets available. Waiting for tickets...");
                 wait(); // Wait until a ticket is added
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                logger.warning("Customer interrupted: " + e.getMessage());
+                break;
             }
         }
         String ticket = tickets.remove(0);
-        System.out.println("Ticket removed: " + ticket +" | Remaining Tickets: " + tickets.size());
+        logger.info("Ticket removed: " + ticket +" | Remaining Tickets: " + tickets.size());
         notifyAll(); // Notify producers that space is available
         return ticket;
     }

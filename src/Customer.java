@@ -1,7 +1,10 @@
+import java.util.logging.*;
+
 public class Customer implements Runnable {
     private final TicketPool ticketPool;
     private final int customerRetrievalRate;
     private final String customerName;
+    private static final Logger logger = Logger.getLogger(Customer.class.getName());
 
     public Customer(TicketPool ticketPool, int customerRetrievalRate, String customerName) {
         this.ticketPool = ticketPool;
@@ -15,11 +18,13 @@ public class Customer implements Runnable {
             try {
                 Thread.sleep(customerRetrievalRate);
                 String ticket = ticketPool.removeTicket();
-                System.out.println(customerName + " purchased: " + ticket);
+                logger.info(customerName + " purchased: " + ticket);
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                logger.warning("Customer interrupted: " + e.getMessage());
                 break;
-            }
+            } catch (Exception e) {
+            logger.severe("Error in Customer thread: " + e.getMessage());
+        }
         }
     }
 }

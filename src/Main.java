@@ -1,13 +1,14 @@
 import java.io.File;
 import java.util.Scanner;
+import java.util.logging.*;
 
 public class Main {
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Configuration config;
         String defaultConfigPath = "config.json";// Default file path for the configuration file
         String textFilePath = "config.txt";// Default file path for the configuration file
-
 
         System.out.println("________________________________________________________________");
         System.out.println("|       Welcome to the Real-Time Event Ticketing System!       |");
@@ -40,14 +41,14 @@ public class Main {
                 config = createNewConfiguration(scanner);
                 config.saveToFile(defaultConfigPath);
                 config.saveToTextFile(textFilePath);
-                System.out.println("New configuration saved to " + defaultConfigPath);
+                logger.info("New configuration saved to " + defaultConfigPath);
             }
         } else {
             // Create a new configuration
             config = createNewConfiguration(scanner);
             config.saveToFile(defaultConfigPath);
             config.saveToTextFile(textFilePath);
-            System.out.println("Configuration saved to " + defaultConfigPath);
+            logger.info("Configuration saved to " + defaultConfigPath);
         }
 
         // Display the configuration details
@@ -87,7 +88,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println("Ticketing process completed.");
+        logger.info("Ticketing process completed.");
 
         scanner.close();
     }
