@@ -1,16 +1,17 @@
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TicketPool {
-    private final List<String> tickets = Collections.synchronizedList(new LinkedList<>());
+    private final List<String> tickets; // Use ArrayList instead of LinkedList
     private final int maxCapacity;
 
     public TicketPool(int maxCapacity) {
         this.maxCapacity = maxCapacity;
+        this.tickets = Collections.synchronizedList(new ArrayList<>());
     }
 
-    public synchronized boolean addTicket(String ticket) {
+    public synchronized boolean addTickets(String ticket) {
         if (tickets.size() < maxCapacity) {
             tickets.add(ticket);
             System.out.println("Ticket added: " + ticket + " | Total Tickets: " + tickets.size());
@@ -32,12 +33,8 @@ public class TicketPool {
             }
         }
         String ticket = tickets.remove(0);
-        System.out.println("Ticket removed: " + ticket + " | Remaining Tickets: " + tickets.size());
+        System.out.println("Ticket removed: " + ticket +" | Remaining Tickets: " + tickets.size());
         notifyAll(); // Notify producers that space is available
         return ticket;
-    }
-
-    public synchronized int getTicketCount() {
-        return tickets.size();
     }
 }

@@ -13,11 +13,11 @@ public class Vendor implements Runnable {
 
     @Override
     public void run() {
-        for (int i = 1; i <= totalTickets; i++) {
+        for (int i = 1; i <= totalTickets+1; i++) {
             try {
                 Thread.sleep(ticketReleaseRate);
                 String ticket = vendorName + "-Ticket-" + i;
-                ticketPool.addTicket(ticket);
+                ticketPool.addTickets(ticket);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

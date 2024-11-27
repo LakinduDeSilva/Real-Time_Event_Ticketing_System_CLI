@@ -5,14 +5,26 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Configuration config;
-        String defaultConfigPath = "config.json"; // Default file path for the configuration file
+        String defaultConfigPath = "config.json";// Default file path for the configuration file
+        String textFilePath = "config.txt";// Default file path for the configuration file
 
-        System.out.println("Welcome to the Real-Time Event Ticketing System!\n");
+
+        System.out.println("________________________________________________________________");
+        System.out.println("|       Welcome to the Real-Time Event Ticketing System!       |");
+        System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
 
         // Ask user whether to import an existing configuration
-        System.out.println("Do you want to import the default configuration file? (yes/no)");
-        String choice = scanner.nextLine().trim().toLowerCase();
+        String choice;
+        do {
+            System.out.print("Do you want to import the default configuration file? (yes/no): ");
+            choice = scanner.nextLine().trim().toLowerCase();
 
+            if (!choice.equals("yes") && !choice.equals("no")) {
+                System.out.println("Invalid input. Please type 'yes' or 'no'.");
+            }
+        } while (!choice.equals("yes") && !choice.equals("no"));
+
+        System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
         if (choice.equals("yes")) {
             // Attempt to load the default configuration file
             File configFile = new File(defaultConfigPath);
@@ -22,26 +34,30 @@ public class Main {
                     System.out.println("Failed to load configuration. Exiting program.");
                     return;
                 }
-                System.out.println("\nLoaded Configuration:");
+                System.out.println("Loaded Configuration:");
             } else {
                 System.out.println("Default configuration file not found. You need to create a new configuration.");
                 config = createNewConfiguration(scanner);
                 config.saveToFile(defaultConfigPath);
+                config.saveToTextFile(textFilePath);
                 System.out.println("New configuration saved to " + defaultConfigPath);
             }
         } else {
             // Create a new configuration
             config = createNewConfiguration(scanner);
             config.saveToFile(defaultConfigPath);
+            config.saveToTextFile(textFilePath);
             System.out.println("Configuration saved to " + defaultConfigPath);
         }
 
         // Display the configuration details
-        System.out.println("\nConfiguration Details:");
+        System.out.println("\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
+        System.out.println("Configuration Details:");
         System.out.printf("Total Tickets: %d%n", config.getTotalTickets());
         System.out.printf("Ticket Release Rate: %d Tickets/Milli-Seconds%n", config.getTicketReleaseRate());
         System.out.printf("Customer Retrieval Rate: %d Tickets/Milli-Seconds%n", config.getCustomerRetrievalRate());
         System.out.printf("Maximum Ticket Capacity: %d%n", config.getMaxTicketCapacity());
+        System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
 
         System.out.println("\nStarting Ticketing System...");
         TicketPool ticketPool = new TicketPool(config.getMaxTicketCapacity());

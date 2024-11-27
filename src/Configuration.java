@@ -37,6 +37,7 @@ public class Configuration {
     // Save to JSON file
     public void saveToFile(String filename) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        System.out.println("\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
         try (FileWriter writer = new FileWriter(filename)) {
             gson.toJson(this, writer);
             System.out.println("Configuration successfully saved to " + filename);
@@ -56,6 +57,20 @@ public class Configuration {
             System.err.println("Error loading configuration from file: " + filename);
             e.printStackTrace();
             return null;
+        }
+    }
+
+    // Save configuration details to a text file
+    public void saveToTextFile(String fileName) {
+        try (FileWriter writer = new FileWriter(fileName, false)) { // 'false' overwrites the file
+            writer.write("Configuration Details:\n");
+            writer.write("Total Tickets: " + totalTickets + "\n");
+            writer.write("Ticket Release Rate: " + ticketReleaseRate + " ms\n");
+            writer.write("Customer Retrieval Rate: " + customerRetrievalRate + " ms\n");
+            writer.write("Max Ticket Capacity: " + maxTicketCapacity + "\n");
+            System.out.println("Configuration saved to " + fileName);
+        } catch (IOException e) {
+            System.out.println("Error saving configuration to text file: " + e.getMessage());
         }
     }
 }
