@@ -12,6 +12,10 @@ public class Customer implements Runnable {
         this.customerName = customerName;
     }
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
     @Override
     public void run() {
         while (true) {
@@ -21,7 +25,7 @@ public class Customer implements Runnable {
                 logger.info(customerName + " purchased: " + ticket);
             } catch (InterruptedException e) {
                 logger.warning("Customer interrupted: " + e.getMessage());
-                break;
+
             } catch (Exception e) {
             logger.severe("Error in Customer thread: " + e.getMessage());
         }

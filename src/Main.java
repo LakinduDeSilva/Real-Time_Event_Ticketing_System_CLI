@@ -87,9 +87,6 @@ public class Main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        logger.info("Ticketing process completed.");
-
         scanner.close();
     }
 

@@ -28,15 +28,20 @@ public class TicketPool {
     public synchronized String removeTicket() {
         while (tickets.isEmpty()) {
             try {
-                logger.info("No tickets available. Waiting for tickets...");
-                wait(); // Wait until a ticket is added
+                if (Vendor.allReleased==true & tickets.isEmpty()){
+                    logger.info("Ticketing process completed. All Tickets sold");
+                    System.exit(0);
+                }else {
+                    logger.info("No tickets available. Waiting for tickets...");
+                    wait();
+                }// Wait until a ticket is added
             } catch (InterruptedException e) {
                 logger.warning("Customer interrupted: " + e.getMessage());
                 break;
             }
         }
         String ticket = tickets.remove(0);
-        logger.info("Ticket removed: " + ticket +" | Remaining Tickets: " + tickets.size());
+        logger.info("Ticket removed: " + ticket+" | Remaining Tickets: " + tickets.size());
         notifyAll(); // Notify producers that space is available
         return ticket;
     }
