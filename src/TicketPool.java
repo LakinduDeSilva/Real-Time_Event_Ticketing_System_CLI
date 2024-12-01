@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.logging.*;
 
 public class TicketPool {
-    private final List<String> tickets; // Use ArrayList instead of LinkedList
+    private final List<Integer> tickets; // Use ArrayList
     private final int maxCapacity;
     private static final Logger logger = Logger.getLogger(Configuration.class.getName());
 
@@ -13,23 +13,26 @@ public class TicketPool {
         this.tickets = Collections.synchronizedList(new ArrayList<>());
     }
 
-    public synchronized boolean addTickets(String ticket) {
-        if (tickets.size() < maxCapacity) {
-            tickets.add(ticket);
-            logger.info("Ticket added: " + ticket + " | Total Tickets: " + tickets.size());
-            notifyAll(); // Notify consumers that a ticket is available
-            return true;
-        } else {
-            logger.info("TicketPool is full. Cannot add more tickets.");
-            return false;
+    public synchronized void addTickets(int ticket, int vendorId){
+        while (tickets.size() >= maxCapacity) {
+            try {
+                logger.info("TicketPool is full. Vendor " + vendorId + " is waiting to add Ticket " + ticket);
+                wait(); // Wait until there is space in the pool
+            } catch (InterruptedException e) {
+                logger.warning("Vendor " +vendorId+ "interrupted while waiting: " + e.getMessage());
+            }
         }
+        tickets.add(ticket);
+        logger.info("Ticket " +ticket+ " added by Vendor " +vendorId+ "     | Remaining Total Tickets: " + tickets.size());
+        notifyAll(); // Notify consumers that a ticket is available
     }
 
-    public synchronized String removeTicket() {
+    public synchronized int removeTicket(int customerId) {
         while (tickets.isEmpty()) {
             try {
                 if (Vendor.allReleased==true & tickets.isEmpty()){
-                    logger.info("Ticketing process completed. All Tickets sold");
+                    System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
+                    System.out.println("Ticketing process completed. All Tickets sold");
                     System.exit(0);
                 }else {
                     logger.info("No tickets available. Waiting for tickets...");
@@ -40,8 +43,8 @@ public class TicketPool {
                 break;
             }
         }
-        String ticket = tickets.remove(0);
-        logger.info("Ticket removed: " + ticket+" | Remaining Tickets: " + tickets.size());
+        int ticket = tickets.remove(0);
+        logger.info("Ticket " +ticket+ " bought by Customer " +customerId+ "  | Remaining Total Tickets: " + tickets.size());
         notifyAll(); // Notify producers that space is available
         return ticket;
     }

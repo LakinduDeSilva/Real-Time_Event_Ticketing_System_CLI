@@ -1,43 +1,51 @@
 import java.util.logging.*;
 
 public class Vendor implements Runnable {
+    private final int vendorId;
     private final TicketPool ticketPool;
     private final int ticketReleaseRate;
     private final int totalTickets;
-    private final String vendorName;
+    private static int currentTicketId = 1;
+    private static int activeVendorId = 1;
     private static final Logger logger = Logger.getLogger(Configuration.class.getName());
-    static Boolean allReleased=false;
+    private static final Object lock = new Object();
+    static Boolean allReleased = false;
 
-    public Vendor(TicketPool ticketPool, int ticketReleaseRate, int totalTickets, String vendorName) {
+    public Vendor(int vendorId, TicketPool ticketPool, int ticketReleaseRate, int totalTickets) {
+        this.vendorId = vendorId;
         this.ticketPool = ticketPool;
         this.ticketReleaseRate = ticketReleaseRate;
         this.totalTickets = totalTickets;
-        this.vendorName = vendorName;
     }
 
-    public static Boolean getAllReleased() {
-        return allReleased;
+    public static synchronized int getCurrentTicketId() {
+        return currentTicketId++;
     }
 
     @Override
     public void run() {
-        for (int i = 1; i <= totalTickets; i++) {
-            try {
-                Thread.sleep(ticketReleaseRate);
-                String ticket = vendorName + "-Ticket-" + i;
-                ticketPool.addTickets(ticket);
-            } catch (InterruptedException e) {
-                logger.warning("Vendor interrupted: " + e.getMessage());
-
-            } catch (Exception e) {
-                logger.severe("Error in Vendor thread: " + e.getMessage());
+        while (currentTicketId<=totalTickets){
+            synchronized (lock) {
+                try {
+                    Thread.sleep(ticketReleaseRate);
+                    int ticket = Vendor.getCurrentTicketId();
+                    ticketPool.addTickets(ticket, vendorId);
+                    lock.notifyAll();
+                    if (currentTicketId <= totalTickets) {
+                        lock.wait(); // Wait for the other vendor to release tickets
+                    }
+                } catch (InterruptedException e) {
+                    logger.warning("Vendor " + vendorId + " interrupted: " + e.getMessage());
+                } catch (Exception e) {
+                    logger.severe("Error in Vendor " + vendorId + " thread: " + e.getMessage());
+                }
             }
         }
         changeAllReleased();
 
     }
     public void changeAllReleased(){
-        logger.info(vendorName + " has released all tickets.");
+        System.out.println(vendorId + " has released all tickets.");
         allReleased=true;
     }
 

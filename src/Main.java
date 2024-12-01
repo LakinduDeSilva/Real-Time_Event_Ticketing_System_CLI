@@ -10,9 +10,9 @@ public class Main {
         String defaultConfigPath = "config.json";// Default file path for the configuration file
         String textFilePath = "config.txt";// Default file path for the configuration file
 
-        System.out.println("________________________________________________________________");
-        System.out.println("|       Welcome to the Real-Time Event Ticketing System!       |");
-        System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
+        System.out.println("____________________________________________________________________");
+        System.out.println("|         Welcome to the Real-Time Event Ticketing System!         |");
+        System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
 
         // Ask user whether to import an existing configuration
         String choice;
@@ -25,7 +25,6 @@ public class Main {
             }
         } while (!choice.equals("yes") && !choice.equals("no"));
 
-        System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
         if (choice.equals("yes")) {
             // Attempt to load the default configuration file
             File configFile = new File(defaultConfigPath);
@@ -52,22 +51,25 @@ public class Main {
         }
 
         // Display the configuration details
-        System.out.println("\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
+        System.out.println("\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
         System.out.println("Configuration Details:");
         System.out.printf("Total Tickets: %d%n", config.getTotalTickets());
         System.out.printf("Ticket Release Rate: %d Tickets/Milli-Seconds%n", config.getTicketReleaseRate());
         System.out.printf("Customer Retrieval Rate: %d Tickets/Milli-Seconds%n", config.getCustomerRetrievalRate());
         System.out.printf("Maximum Ticket Capacity: %d%n", config.getMaxTicketCapacity());
-        System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
+        System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
 
         System.out.println("\nStarting Ticketing System...");
         TicketPool ticketPool = new TicketPool(config.getMaxTicketCapacity());
 
-        Vendor vendor1 = new Vendor(ticketPool, config.getTicketReleaseRate(), config.getTotalTickets() / 2, "Vendor1");
-        Vendor vendor2 = new Vendor(ticketPool, config.getTicketReleaseRate(), config.getTotalTickets() / 2, "Vendor2");
+//        Vendor vendor1 = new Vendor(ticketPool, config.getTicketReleaseRate(), config.getTotalTickets() / 2, 1);
+//        Vendor vendor2 = new Vendor(ticketPool, config.getTicketReleaseRate(), config.getTotalTickets() / 2, 2);
 
-        Customer customer1 = new Customer(ticketPool, config.getCustomerRetrievalRate(), "Customer1");
-        Customer customer2 = new Customer(ticketPool, config.getCustomerRetrievalRate(), "Customer2");
+        Vendor vendor1 = new Vendor(1,ticketPool,config.getTicketReleaseRate(),config.getTotalTickets());
+        Vendor vendor2 = new Vendor(2,ticketPool,config.getTicketReleaseRate(),config.getTotalTickets());
+
+        Customer customer1 = new Customer(ticketPool, config.getCustomerRetrievalRate(), 1);
+        Customer customer2 = new Customer(ticketPool, config.getCustomerRetrievalRate(), 2);
 
         Thread vendorThread1 = new Thread(vendor1);
         Thread vendorThread2 = new Thread(vendor2);
