@@ -93,6 +93,7 @@ public class Main {
     }
 
     private static Configuration createNewConfiguration(Scanner scanner) {
+        System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
         int totalTickets = getValidInput(scanner, "Enter the total number of tickets: ");
         int ticketReleaseRate = getValidInput(scanner, "Enter the ticket release rate (Tickets/Milli-Seconds): ");
         int customerRetrievalRate = getValidInput(scanner, "Enter the customer retrieval rate (Tickets/Milli-Seconds): ");
