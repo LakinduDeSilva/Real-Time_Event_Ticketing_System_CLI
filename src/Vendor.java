@@ -28,6 +28,11 @@ public class Vendor implements Runnable {
         this.totalTickets = totalTickets;
     }
 
+    /**
+     * Gets the current ticket ID and increments the global counter.
+     *
+     * @return The current ticket ID.
+     */
     public static synchronized int getCurrentTicketId() {
         return currentTicketId++;
     }

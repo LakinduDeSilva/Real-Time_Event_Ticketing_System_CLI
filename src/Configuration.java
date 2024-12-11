@@ -30,18 +30,38 @@ public class Configuration {
         this.maxTicketCapacity = maxTicketCapacity;
     }
 
+    /**
+     * Gets the total number of tickets.
+     *
+     * @return Total number of tickets.
+     */
     public int getTotalTickets() {
         return totalTickets;
     }
 
+    /**
+     * Gets the rate at which tickets are released.
+     *
+     * @return Ticket release rate in milliseconds.
+     */
     public int getTicketReleaseRate() {
         return ticketReleaseRate;
     }
 
+    /**
+     * Gets the rate at which customers retrieve tickets.
+     *
+     * @return Customer retrieval rate in milliseconds.
+     */
     public int getCustomerRetrievalRate() {
         return customerRetrievalRate;
     }
 
+    /**
+     * Gets the maximum capacity of the ticket pool.
+     *
+     * @return Maximum ticket capacity.
+     */
     public int getMaxTicketCapacity() {
         return maxTicketCapacity;
     }
@@ -55,7 +75,7 @@ public class Configuration {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println("\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
         try (FileWriter writer = new FileWriter(filename)) {
-            gson.toJson(this, writer);// Serialize and save as JSON
+            gson.toJson(this, writer); // Serialize and save as JSON
             logger.info("Configuration successfully saved to " + filename);
         } catch (IOException e) {
             logger.severe("Error saving configuration: " + e.getMessage());
@@ -71,7 +91,7 @@ public class Configuration {
     public static Configuration loadFromFile(String filename) {
         Gson gson = new Gson();
         try (FileReader reader = new FileReader(filename)) {
-            Configuration config = gson.fromJson(reader, Configuration.class);// Deserialize from JSON
+            Configuration config = gson.fromJson(reader, Configuration.class); // Deserialize from JSON
             logger.info("Configuration successfully loaded from " + filename);
             return config;
         } catch (IOException e) {
