@@ -2,7 +2,15 @@ import java.io.File;
 import java.util.Scanner;
 import java.util.logging.*;
 
+/**
+ * The Main class is the entry point of the Real-Time Event Ticketing System.
+ * It handles the configuration setup, initialization of vendors and customers,
+ * and manages the multithreaded ticketing process.
+ */
 public class Main {
+    /**
+     * The main method where the program starts.
+     */
     private static final Logger logger = Logger.getLogger(Main.class.getName());
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -92,7 +100,11 @@ public class Main {
         scanner.close();
     }
 
-    // Create new configuration with user input
+    /**
+     * Creates a new configuration based on user input.
+     * @param scanner Scanner for reading user input.
+     * @return A new Configuration object.
+     */
     private static Configuration createNewConfiguration(Scanner scanner) {
         System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
         int totalTickets = getValidInput(scanner, "Enter the total number of tickets: ");
@@ -103,7 +115,12 @@ public class Main {
         return new Configuration(totalTickets, ticketReleaseRate, customerRetrievalRate, maxTicketCapacity);
     }
 
-    // Validate numeric input
+    /**
+     * Prompts the user for a valid integer input and validates it.
+     * @param scanner Scanner for reading user input.
+     * @param prompt The message to prompt the user.
+     * @return A valid integer input greater than 0.
+     */
     private static int getValidInput(Scanner scanner, String prompt) {
         int input = -1;
         while (input <= 0) {

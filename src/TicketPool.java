@@ -3,18 +3,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.*;
 
+/**
+ * The TicketPool class manages a synchronized pool of tickets that vendors can add to and customers can purchase from.
+ * It ensures thread safety and manages capacity constraints.
+ */
 public class TicketPool {
     private final List<Integer> tickets; // List of tickets
     private final int maxCapacity;// Max tickets allowed
     private static final Logger logger = Logger.getLogger(TicketPool.class.getName());
 
-    // Constructor
+    /**
+     * Constructor for TicketPool.
+     * @param maxCapacity The maximum capacity of tickets that can be held in the pool.
+     */
     public TicketPool(int maxCapacity) {
         this.maxCapacity = maxCapacity;
         this.tickets = Collections.synchronizedList(new ArrayList<>());
     }
 
-    // Add a ticket to the pool
+    /**
+     * Adds a ticket to the pool. If the pool is full, the method waits until space is available.
+     * @param ticket The ticket number to add.
+     * @param vendorId The ID of the vendor adding the ticket.
+     */
     public synchronized void addTickets(int ticket, int vendorId){
         while (tickets.size() >= maxCapacity) {
             try {
@@ -29,7 +40,11 @@ public class TicketPool {
         notifyAll(); // Notify customers
     }
 
-    // Remove a ticket from the pool
+    /**
+     * Removes a ticket from the pool. If no tickets are available, the method waits until a ticket is added.
+     * If all vendors have released their tickets and the pool is empty, the process ends.
+     * @param customerId The ID of the customer purchasing the ticket.
+     */
     public synchronized void removeTicket(int customerId) {
         while (tickets.isEmpty()) {
             try {

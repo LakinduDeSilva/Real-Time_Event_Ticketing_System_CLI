@@ -1,14 +1,22 @@
 import java.util.logging.*;
 
+/**
+ * Customer class responsible for retrieving tickets from the pool.
+ */
 public class Customer implements Runnable {
-    // Declaration of instance variables
     private final TicketPool ticketPool;
     private final int customerRetrievalRate;
     private final int customerId;
     private static final Logger logger = Logger.getLogger(Customer.class.getName());
-    private static final Object lock = new Object();// Lock for synchronization
+    private static final Object lock = new Object();
 
-    //Constructor
+    /**
+     * Constructs a Customer instance.
+     *
+     * @param ticketPool            Shared ticket pool.
+     * @param customerRetrievalRate Rate of ticket retrieval (ms).
+     * @param customerId            Unique ID of the customer.
+     */
     public Customer(TicketPool ticketPool, int customerRetrievalRate, int customerId) {
         this.ticketPool = ticketPool;
         this.customerRetrievalRate = customerRetrievalRate;

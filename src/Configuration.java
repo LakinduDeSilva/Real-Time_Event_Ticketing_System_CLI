@@ -5,14 +5,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.*;
 
+/**
+ * Manages system configuration settings and supports saving/loading to/from files.
+ */
 public class Configuration {
-    private final int totalTickets;// Total tickets available
-    private final int ticketReleaseRate;// Rate of ticket release (ms)
-    private final int customerRetrievalRate;// Rate of ticket retrieval (ms)
-    private final int maxTicketCapacity;// Maximum ticket pool size
+    private final int totalTickets;
+    private final int ticketReleaseRate;
+    private final int customerRetrievalRate;
+    private final int maxTicketCapacity;
     private static final Logger logger = Logger.getLogger(Configuration.class.getName());
 
-    // Constructor
+    /**
+     * Constructs a Configuration instance with specified parameters.
+     *
+     * @param totalTickets         Total number of tickets.
+     * @param ticketReleaseRate    Rate at which tickets are released (ms).
+     * @param customerRetrievalRate Rate at which customers retrieve tickets (ms).
+     * @param maxTicketCapacity    Maximum capacity of the ticket pool.
+     */
     public Configuration(int totalTickets, int ticketReleaseRate, int customerRetrievalRate, int maxTicketCapacity) {
         this.totalTickets = totalTickets;
         this.ticketReleaseRate = ticketReleaseRate;
@@ -20,7 +30,6 @@ public class Configuration {
         this.maxTicketCapacity = maxTicketCapacity;
     }
 
-    // Getters
     public int getTotalTickets() {
         return totalTickets;
     }
@@ -37,7 +46,11 @@ public class Configuration {
         return maxTicketCapacity;
     }
 
-    // Save to JSON file
+    /**
+     * Saves the configuration to a JSON file.
+     *
+     * @param filename Name of the file to save the configuration.
+     */
     public void saveToFile(String filename) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println("\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
@@ -49,7 +62,12 @@ public class Configuration {
         }
     }
 
-    // Load from JSON file
+    /**
+     * Loads the configuration from a JSON file.
+     *
+     * @param filename Name of the file to load the configuration from.
+     * @return Loaded Configuration instance, or null if an error occurs.
+     */
     public static Configuration loadFromFile(String filename) {
         Gson gson = new Gson();
         try (FileReader reader = new FileReader(filename)) {
@@ -63,7 +81,11 @@ public class Configuration {
         }
     }
 
-    // Save to  text file
+    /**
+     * Saves configuration details to a plain text file.
+     *
+     * @param fileName Name of the text file.
+     */
     public void saveToTextFile(String fileName) {
         try (FileWriter writer = new FileWriter(fileName, false)) { // 'false' overwrites the file
             writer.write("Configuration Details:\n");

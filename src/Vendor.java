@@ -1,17 +1,26 @@
 import java.util.logging.*;
 
+/**
+ * Vendor class responsible for releasing tickets into the pool.
+ */
 public class Vendor implements Runnable {
-    // Declaration of instance variables
     private final int vendorId;
     private final TicketPool ticketPool;
     private final int ticketReleaseRate;
     private final int totalTickets;
     private static int currentTicketId = 1;// Global ticket counter
     private static final Logger logger = Logger.getLogger(Vendor.class.getName());
-    private static final Object lock = new Object();// Lock for synchronization
-    static Boolean allReleased = false;// Flag to indicate all tickets released
+    private static final Object lock = new Object();
+    static Boolean allReleased = false;
 
-    //Constructor
+    /**
+     * Constructs a Vendor instance.
+     *
+     * @param vendorId           Unique ID of the vendor.
+     * @param ticketPool         Shared ticket pool.
+     * @param ticketReleaseRate  Rate of ticket release (ms).
+     * @param totalTickets       Total tickets to be released.
+     */
     public Vendor(int vendorId, TicketPool ticketPool, int ticketReleaseRate, int totalTickets) {
         this.vendorId = vendorId;
         this.ticketPool = ticketPool;
@@ -45,7 +54,9 @@ public class Vendor implements Runnable {
         changeAllReleased();// Mark as completed
 
     }
-    // Marks all tickets as released
+    /**
+     * Marks all tickets as released.
+     */
     public void changeAllReleased(){
         System.out.println("Vendor "+vendorId + " has released all tickets.");
         allReleased=true;
