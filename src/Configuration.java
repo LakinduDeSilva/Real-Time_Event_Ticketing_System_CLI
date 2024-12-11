@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.util.logging.*;
 
 public class Configuration {
-    private int totalTickets;
-    private int ticketReleaseRate;
-    private int customerRetrievalRate;
-    private int maxTicketCapacity;
+    private final int totalTickets;// Total tickets available
+    private final int ticketReleaseRate;// Rate of ticket release (ms)
+    private final int customerRetrievalRate;// Rate of ticket retrieval (ms)
+    private final int maxTicketCapacity;// Maximum ticket pool size
     private static final Logger logger = Logger.getLogger(Configuration.class.getName());
 
-    // Constructor for the Configuration class
+    // Constructor
     public Configuration(int totalTickets, int ticketReleaseRate, int customerRetrievalRate, int maxTicketCapacity) {
         this.totalTickets = totalTickets;
         this.ticketReleaseRate = ticketReleaseRate;
@@ -20,6 +20,7 @@ public class Configuration {
         this.maxTicketCapacity = maxTicketCapacity;
     }
 
+    // Getters
     public int getTotalTickets() {
         return totalTickets;
     }
@@ -41,7 +42,7 @@ public class Configuration {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println("\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
         try (FileWriter writer = new FileWriter(filename)) {
-            gson.toJson(this, writer);
+            gson.toJson(this, writer);// Serialize and save as JSON
             logger.info("Configuration successfully saved to " + filename);
         } catch (IOException e) {
             logger.severe("Error saving configuration: " + e.getMessage());
@@ -52,7 +53,7 @@ public class Configuration {
     public static Configuration loadFromFile(String filename) {
         Gson gson = new Gson();
         try (FileReader reader = new FileReader(filename)) {
-            Configuration config = gson.fromJson(reader, Configuration.class);
+            Configuration config = gson.fromJson(reader, Configuration.class);// Deserialize from JSON
             logger.info("Configuration successfully loaded from " + filename);
             return config;
         } catch (IOException e) {
@@ -62,7 +63,7 @@ public class Configuration {
         }
     }
 
-    // Save configuration details to a text file
+    // Save to  text file
     public void saveToTextFile(String fileName) {
         try (FileWriter writer = new FileWriter(fileName, false)) { // 'false' overwrites the file
             writer.write("Configuration Details:\n");

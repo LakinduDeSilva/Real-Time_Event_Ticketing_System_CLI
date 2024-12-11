@@ -1,5 +1,5 @@
 Configuration Details:
 Total Tickets: 20
-Ticket Release Rate: 3000 ms
-Customer Retrieval Rate: 2000 ms
+Ticket Release Rate: 2000 ms
+Customer Retrieval Rate: 4000 ms
 Max Ticket Capacity: 10

@@ -7,14 +7,15 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Configuration config;
-        String defaultConfigPath = "config.json";// Default file path for the configuration file
-        String textFilePath = "config.txt";// Default file path for the configuration file
+        String defaultConfigPath = "config.json";// Default JSON config
+        String textFilePath = "config.txt";// Default text config
 
+        // Welcome message
         System.out.println("____________________________________________________________________");
         System.out.println("|         Welcome to the Real-Time Event Ticketing System!         |");
         System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
 
-        // Ask user whether to import an existing configuration
+        // Load or create configuration
         String choice;
         do {
             System.out.print("Do you want to import the default configuration file? (yes/no): ");
@@ -26,7 +27,7 @@ public class Main {
         } while (!choice.equals("yes") && !choice.equals("no"));
 
         if (choice.equals("yes")) {
-            // Attempt to load the default configuration file
+            // Try loading config file
             File configFile = new File(defaultConfigPath);
             if (configFile.exists() && configFile.isFile()) {
                 config = Configuration.loadFromFile(defaultConfigPath);
@@ -36,6 +37,7 @@ public class Main {
                 }
                 System.out.println("Loaded Configuration:");
             } else {
+                // Create new config if file not found
                 System.out.println("Default configuration file not found. You need to create a new configuration.");
                 config = createNewConfiguration(scanner);
                 config.saveToFile(defaultConfigPath);
@@ -43,14 +45,14 @@ public class Main {
                 logger.info("New configuration saved to " + defaultConfigPath);
             }
         } else {
-            // Create a new configuration
+            // Create new config
             config = createNewConfiguration(scanner);
             config.saveToFile(defaultConfigPath);
             config.saveToTextFile(textFilePath);
             logger.info("Configuration saved to " + defaultConfigPath);
         }
 
-        // Display the configuration details
+        // Display configuration details
         System.out.println("\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
         System.out.println("Configuration Details:");
         System.out.printf("Total Tickets: %d%n", config.getTotalTickets());
@@ -58,19 +60,16 @@ public class Main {
         System.out.printf("Customer Retrieval Rate: %d Tickets/Milli-Seconds%n", config.getCustomerRetrievalRate());
         System.out.printf("Maximum Ticket Capacity: %d%n", config.getMaxTicketCapacity());
         System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
-
         System.out.println("\nStarting Ticketing System...");
+
+        // Initialize ticket pool and participants
         TicketPool ticketPool = new TicketPool(config.getMaxTicketCapacity());
-
-//        Vendor vendor1 = new Vendor(ticketPool, config.getTicketReleaseRate(), config.getTotalTickets() / 2, 1);
-//        Vendor vendor2 = new Vendor(ticketPool, config.getTicketReleaseRate(), config.getTotalTickets() / 2, 2);
-
         Vendor vendor1 = new Vendor(1,ticketPool,config.getTicketReleaseRate(),config.getTotalTickets());
         Vendor vendor2 = new Vendor(2,ticketPool,config.getTicketReleaseRate(),config.getTotalTickets());
-
         Customer customer1 = new Customer(ticketPool, config.getCustomerRetrievalRate(), 1);
         Customer customer2 = new Customer(ticketPool, config.getCustomerRetrievalRate(), 2);
 
+        // Start threads
         Thread vendorThread1 = new Thread(vendor1);
         Thread vendorThread2 = new Thread(vendor2);
         Thread customerThread1 = new Thread(customer1);
@@ -81,6 +80,7 @@ public class Main {
         customerThread1.start();
         customerThread2.start();
 
+        // Wait for threads to finish
         try {
             vendorThread1.join();
             vendorThread2.join();
@@ -92,6 +92,7 @@ public class Main {
         scanner.close();
     }
 
+    // Create new configuration with user input
     private static Configuration createNewConfiguration(Scanner scanner) {
         System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾\n");
         int totalTickets = getValidInput(scanner, "Enter the total number of tickets: ");
@@ -102,6 +103,7 @@ public class Main {
         return new Configuration(totalTickets, ticketReleaseRate, customerRetrievalRate, maxTicketCapacity);
     }
 
+    // Validate numeric input
     private static int getValidInput(Scanner scanner, String prompt) {
         int input = -1;
         while (input <= 0) {
