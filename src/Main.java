@@ -56,8 +56,8 @@ public class Main {
         System.out.println("\n‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
         System.out.println("Configuration Details:");
         System.out.printf("Total Tickets: %d%n", config.getTotalTickets());
-        System.out.printf("Ticket Release Rate: %d Tickets/Milli-Seconds%n", config.getTicketReleaseRate());
-        System.out.printf("Customer Retrieval Rate: %d Tickets/Milli-Seconds%n", config.getCustomerRetrievalRate());
+        System.out.printf("Ticket Release Rate: %d Milli-Seconds%n", config.getTicketReleaseRate());
+        System.out.printf("Customer Retrieval Rate: %d Milli-Seconds%n", config.getCustomerRetrievalRate());
         System.out.printf("Maximum Ticket Capacity: %d%n", config.getMaxTicketCapacity());
         System.out.println("‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
         System.out.println("\nStarting Ticketing System...");

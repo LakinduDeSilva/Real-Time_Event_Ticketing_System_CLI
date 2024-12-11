@@ -30,7 +30,7 @@ public class TicketPool {
     }
 
     // Remove a ticket from the pool
-    public synchronized int removeTicket(int customerId) {
+    public synchronized void removeTicket(int customerId) {
         while (tickets.isEmpty()) {
             try {
                 if (Vendor.allReleased==true & tickets.isEmpty()){
@@ -46,9 +46,8 @@ public class TicketPool {
                 break;
             }
         }
-        int ticket = tickets.remove(0);//Remove ticket
+        int ticket = tickets.removeFirst();//Remove ticket
         logger.info("Ticket " +ticket+ " bought by Customer " +customerId+ "  | Remaining Total Tickets: " + tickets.size());
         notifyAll(); // Notify vendors
-        return ticket;
     }
 }
